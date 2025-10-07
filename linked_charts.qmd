@@ -28,10 +28,11 @@ This chart is based on the [Share Dataset](https://echarts.apache.org/examples/e
 #| fig-width: 12
 #| fig-height: 6
 
-suppressPackageStartupMessages(library(echarts4r))
-suppressPackageStartupMessages(library(tidyr))
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(htmlwidgets))
+suppressPackageStartupMessages({
+  library(echarts4r)
+  library(dplyr)
+  library(htmlwidgets)
+})
 
 df <- tibble(
   day = c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"),
