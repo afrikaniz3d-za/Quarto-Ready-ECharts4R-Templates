@@ -14,7 +14,42 @@ Ntobeko
 
 # Latest Addittion: Calendar Charts  
 
-![][1]
+![][1]  
+
+```{r}
+#| code-fold: true
+#| label: calendar-range
+#| fig-width: 12
+#| fig-height: 2
+
+suppressPackageStartupMessages({
+  library(echarts4r)
+  library(dplyr)
+  library(htmlwidgets)
+})
+
+dates <- seq.Date(as.Date("2025-01-01"), as.Date("2025-12-31"), by = "day")
+values <- rnorm(length(dates), 20, 6)
+year <- data.frame(date = dates, values = values)
+
+year |>
+  e_charts(
+    date,
+    height = 220) |>
+  e_calendar(
+    range = c("2025-01-01", "2025-7-31"),
+    left = 160,
+    top = 50,
+    bottom = 20,
+    cellSize = c(20, 20)
+  ) |>
+  e_visual_map(
+    max = 30,
+    top = 50
+  ) |>
+  e_heatmap(values, coord_system = "calendar")
+
+```  
 
 
 [1]: /images/20251013.gif
