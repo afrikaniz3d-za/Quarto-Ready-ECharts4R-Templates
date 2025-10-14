@@ -12,3 +12,7 @@ ECharts is such a great library, and I'm enjoying learning the tools and the lan
 If you find anything that you think would do the job better or more efficiently please don't hesitate to get in touch.  
 Ntobeko  
 
+![][1]
+
+
+[1]: /images/20251013.gif
