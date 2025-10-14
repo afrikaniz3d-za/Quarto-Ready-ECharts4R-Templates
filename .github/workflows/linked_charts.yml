@@ -1,7 +1,7 @@
 ---
-title: "Linked Charts"
-subtitle: "Creating multiple charts linked, and reacting, to the same dataset"
-date: 10-07-2025
+title: "Quarty-Ready Templates for eCharts4R Visualization"
+subtitle: "--"
+date: 10-15-2025
 author: Ntobeko Sosibo
 toc: true
 toc-location: left
@@ -16,193 +16,52 @@ format:
     embed-resources: true
     self-contained: true
 ---
-## 1. Pie Chart Linked with a Line Chart  
-
-This chart is based on the [Share Dataset](https://echarts.apache.org/examples/en/editor.html?c=dataset-link) example.
-
+## 1.Bar Charts  
+  
+--
+  
 &nbsp;  
 
-```{r}
-#| code-fold: true
-#| label: income-share-pie-leading-line-chart
-#| fig-width: 12
-#| fig-height: 6
-
-suppressPackageStartupMessages({
-  library(echarts4r)
-  library(dplyr)
-  library(htmlwidgets)
-})
-
-df <- tibble(
-  day = c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"),
-  income = c(120456.95,20456.95,150456.95,180456.95,70456.95,310456.95,130456.95),
-  expenses = c(50456.95,10456.95,55456.95,23456.95,75456.95,88456.95,66456.95)
-)
-
-df$nett_income <- df$income - df$expenses
-df$income_pct <- round(df$income / sum(df$income) * 100)
-df$expenses_pct <- round(df$expenses / sum(df$expenses) * 100)
-
-df <- as.data.frame(df)
-
-e1 <- df |>
-e_charts(
-        day,
-        height = 350
-        ) |>
+## 2.Linked Charts  
   
-e_pie(income_pct,
-      name = "Income Percentage",
-      top = 60,
-      radius = "75%",
-      emphasis = list(
-        focus = "self")
-      ) |>
-
-e_tooltip(
-  trigger = "item",
-  formatter = htmlwidgets::JS("
-    function(params) {
-      return params.marker + '<b style=\"color:#2a2a2a\">' + params.name + '</b><br>' +
-             'Income Share: <span style=\"color:#EE6666\">' + '<b span style=\"color:#EE6666\">' + params.value + '%</span>';
-    }
-  ")
-) |>
-e_labels() |>
-e_legend(
-  show = FALSE
-) |>
-e_group("grp") |>
-e_connect_group("grp")
-
-e2 <- df |>
-e_charts(
-        day,
-        height = 350
-        ) |>
-e_line(income,
-       name = "Income",
-       smooth = TRUE,
-       itemStyle = list(
-         color = "#1e8496"),
-       emphasis = list(
-         focus = "series")
-       )|>
-e_line(expenses,
-       name = "Expenses",
-       smooth = TRUE,
-       itemStyle = list(
-         color = "#132e57"),
-       emphasis = list(
-         focus = "series")
-       )|>
-e_line(nett_income,
-       name = "Nett Income",
-       smooth = TRUE,
-       itemStyle = list(
-         color = "#fa621c"),
-       emphasis = list(
-         focus = "series")
-       )|>
-e_tooltip(
-  trigger = "axis", 
-  formatter = htmlwidgets::JS("
-  function(params) {
-    // Array case (trigger = 'axis') vs single-item 'item'
-    if (Array.isArray(params)) {
-      // Header — extract a clean YYYY-MM-DD if available
-      let raw = params[0].axisValue || params[0].name || '';
-      let match = raw.match(/\\d{4}-\\d{2}-\\d{2}/);
-      let day = match ? match[0] : raw;
-
-      let tooltip = '<div style=\"font-weight:bold; color:#333; margin-bottom:6px;\">' + day + '</div>';
-
-      params.forEach(function(p){
-        // --- 1) Get the raw value (could be number or array like [x, y])
-        let val = p.value;
-
-        // If it's an array (e.g. [x, y]), take the last element which is usually the y
-        if (Array.isArray(val)) {
-          val = val[val.length - 1];
-        }
-
-        // --- 2) Coerce to number (defensive)
-        let num = Number(val);
-        if (!isFinite(num)) {
-          num = 0; // fallback; could also use p.data.someField if you know it
-        }
-
-        // --- 3) Prepare sign and absolute formatted value
-        let sign = num < 0 ? '-' : '';
-        let abs = Math.abs(num);
-        let formatted = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-        // --- 4) Optional coloring for negatives (red) — remove if you don't want color
-        let valueHtml = (num < 0)
-          ? '<b style=\"color:#d9534f;\">' + sign + '$' + formatted + '</b>'
-          : '<b>' + sign + '$' + formatted + '</b>';
-
-        // --- 5) Assemble the row (marker + series name + value)
-        tooltip += '<div style=\"margin:3px 0;\">' +
-                    p.marker + ' <span style=\"color:#666;\">' + p.seriesName + ':</span> ' +
-                    valueHtml +
-                   '</div>';
-      });
-
-      return tooltip;
-    } else {
-      // Single item fallback (trigger = 'item')
-      let val = params.value;
-      if (Array.isArray(val)) val = val[val.length - 1];
-      let num = Number(val);
-      if (!isFinite(num)) num = 0;
-      let sign = num < 0 ? '-' : '';
-      let abs = Math.abs(num);
-      let formatted = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      let valueHtml = (num < 0) ? '<b style=\"color:#d9534f;\">' + sign + '$' + formatted + '</b>' : '<b>' + sign + '$' + formatted + '</b>';
-
-      return params.marker + ' <span style=\"color:#666;\">' + params.seriesName + ':</span> ' + valueHtml;
-    }
-  }
-") 
-) |>
+--
   
-e_y_axis_(
-  show = FALSE
-) |>
-e_legend(
-  bottom = "1%"
-) |>
-  
-e_group("grp")
-e_arrange(
-  e1, 
-  e2, 
-  cols = 1
-  )
-```  
-
-&nbsp;
-
-This first chart does just like it's inspiration, and other very differently. The first similar feature is the whiting-out of every other element when hovering over a line or a wedge. This isn't out-the-box for these charts and in introduced using the `emphasis` argument within the `itemStyle()` function. The rest was almost line-for-line what's in the [`echarts4.pdf`](https://cran.r-project.org/web/packages/echarts4r/echarts4r.pdf) documentation.  
-
-Where most of the work needed to be done was with the tooltips.  
-
-A lot gets taken away when you combine/link charts using the `e_arrange()` function, so I needed to reinsert a lot of the lost information using `htmlwidgets` via a `formatter =` argument within the `e_topoltip()` function.  
-
-At first the documentation suggested using the simpler `formatter = ` strings that used placeholder letters, 
-
-| Placeholder | Meaning                                   |
-| ----------- | ----------------------------------------- |
-| `{a}`       | Series name (`Income Percentage`)         |
-| `{b}`       | Item name (day)                           |
-| `{c}`       | Raw value from data (your `income_pct`)   |
-| `{d}`       | Computed % of total (ECharts calculation) |  
 &nbsp;  
 
-, but I needed more control to both add more context and to also make it easier to identify what was being done at a glance. This resulted in much denser code, but you can identify the steps taken an apply some of that logic differently in other places.  
+## 3.Calendar Charts  
+  
+--
+  
+&nbsp;  
 
+## 4.Calendar Charts  
+  
+--
+  
+&nbsp;  
+
+## 1.Bar Charts  
+  
+--
+  
+&nbsp;  
+
+## 1.Bar Charts  
+  
+--
+  
+&nbsp;  
+
+## 1.Bar Charts  
+  
+--
+  
+&nbsp;  
+
+## 1.Bar Charts  
+  
+--
+  
 &nbsp;  
 
 
@@ -213,4 +72,6 @@ It wasn't as easy to get this conversion to match the [ECharts](https://echarts.
 I think this version has its own merits and I will add to this document as I work more with these charts and learn new things.  
 
 If you think something's missing or have a question give me a shout and we can figure it out together.  
+
+[1]: "/images/
 
