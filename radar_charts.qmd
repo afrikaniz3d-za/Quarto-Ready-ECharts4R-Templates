@@ -19,7 +19,7 @@ format:
 
 ### 1.1 Basic radar chart  
 
-Here's the example (with minor adjustments) provided on John Coene's [ECharts4R site](https://echarts4r.john-coene.com/articles/chart_types). It depicts two series, `y` and `z`, mapped two five variables (A-E). The chart has a tooltip and a `piecewise` legend that allows you to toggle visibility for the series.  
+Here's the example (with minor adjustments) provided on John Coene's [ECharts4R site](https://echarts4r.john-coene.com/articles/chart_types). It depicts two series, `y` and `z`, mapped to five variables (A-E). The chart has a tooltip and a `piecewise` legend that allows you to toggle visibility for the series.  
 
 &nbsp;  
 
